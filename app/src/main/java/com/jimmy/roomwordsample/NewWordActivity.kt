@@ -18,7 +18,12 @@ import android.widget.EditText
 
 class NewWordActivity : AppCompatActivity() {
 
-    val EXTRA_REPLY = "com.example.android.wordlistsql.REPLY"
+    /**
+     * companion object allows constant members invocation in other classes
+     */
+    companion object {
+        const val EXTRA_REPLY = "com.example.android.wordlistsql.REPLY"
+    }
 
      val mEditWordView: EditText? = null
 
