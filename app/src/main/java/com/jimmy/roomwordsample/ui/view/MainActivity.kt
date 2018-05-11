@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
                     .setAction("Action", null).show()
         }
 
-        var recyclerView : RecyclerView = findViewById(R.id.recyclerview)
+        val recyclerView : RecyclerView = findViewById(R.id.recyclerview)
         val adapter  =  WordListAdapter(this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager =  LinearLayoutManager(this)
