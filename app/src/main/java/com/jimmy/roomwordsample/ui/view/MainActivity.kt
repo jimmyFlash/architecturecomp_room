@@ -3,9 +3,12 @@ package com.jimmy.roomwordsample.ui.view
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import com.jimmy.roomwordsample.R
+import com.jimmy.roomwordsample.ui.adapters.WordListAdapter
 
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -20,6 +23,11 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
+
+        var recyclerView : RecyclerView = findViewById(R.id.recyclerview)
+        val adapter  =  WordListAdapter(this)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager =  LinearLayoutManager(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
