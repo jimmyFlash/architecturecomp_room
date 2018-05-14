@@ -34,7 +34,17 @@ public class Word {
     @ColumnInfo(name = "word")
     private String mWord;
 
-    public Word(@NonNull String word) {this.mWord = word;}
+
+    @NonNull
+    @ColumnInfo(name = "meaning")
+    private String mMeaning;
+
+    public Word(@NonNull String word, @NonNull String meaning) {
+        this.mWord = word;
+        this.mMeaning = meaning;
+    }
 
     public String getWord(){return this.mWord;}
+
+    public String getMeaning() {return this.mMeaning;}
 }

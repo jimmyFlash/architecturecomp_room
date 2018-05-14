@@ -1,5 +1,6 @@
 package com.jimmy.roomwordsample.businesslogic.storage;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
@@ -10,6 +11,9 @@ import android.support.annotation.NonNull;
 
 import com.jimmy.roomwordsample.businesslogic.storage.doa.WordDao;
 import com.jimmy.roomwordsample.businesslogic.storage.entities.Word;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Annotate the class to be a Room database, declare the entities that belong
@@ -72,11 +76,16 @@ public abstract class WordRoomDatabase extends RoomDatabase{
 
         @Override
         protected Void doInBackground(final Void... params) {
-            mDao.deleteAll();
-            Word word = new Word("Hello");
-            mDao.insert(word);
-            word = new Word("World");
-            mDao.insert(word);
+            LiveData<List<Word>> listWords = Objects.requireNonNull(mDao.getAllWords());
+
+            if(listWords == null) {
+                mDao.deleteAll();
+                Word word = new Word("Android", "Mobile operating system developed by Google," +
+                        " based on a modified version of the Linux kernel");
+                mDao.insert(word);
+                word = new Word("IOS", "Mobile operating system created and developed by Apple Inc. exclusively for its hardware");
+                mDao.insert(word);
+            }
             return null;
         }
     }

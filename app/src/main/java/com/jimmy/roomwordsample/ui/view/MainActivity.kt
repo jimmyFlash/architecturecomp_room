@@ -1,37 +1,36 @@
 package com.jimmy.roomwordsample.ui.view
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
-import com.jimmy.roomwordsample.R
-import com.jimmy.roomwordsample.ui.adapters.WordListAdapter
-
-import kotlinx.android.synthetic.main.activity_main.*
-import com.jimmy.roomwordsample.ui.viewmodel.WordViewModel
-import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
-import android.support.annotation.Nullable
-import com.jimmy.roomwordsample.businesslogic.storage.entities.Word
 import android.widget.Toast
 import com.jimmy.roomwordsample.NewWordActivity
-import android.R.attr.data
-import android.app.Activity
-
+import com.jimmy.roomwordsample.R
+import com.jimmy.roomwordsample.businesslogic.storage.entities.Word
+import com.jimmy.roomwordsample.ui.adapters.WordListAdapter
+import com.jimmy.roomwordsample.ui.viewmodel.WordViewModel
+import kotlinx.android.synthetic.main.activity_main.*
+import android.support.v7.widget.DividerItemDecoration
 
 
 
 
 class MainActivity : AppCompatActivity() {
 
+
+
     lateinit var mWordViewModel: WordViewModel
     val NEW_WORD_ACTIVITY_REQUEST_CODE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
@@ -50,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         val adapter  =  WordListAdapter(this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager =  LinearLayoutManager(this)
+        recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
 
         /*
         observer for the LiveData returned by getAllWords().
@@ -86,7 +86,8 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
 
-            val word : Word = Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY))
+            val word : Word = Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY),
+                    data.getStringExtra(NewWordActivity.EXTRA_REPLY_MEANING))
             mWordViewModel.insert(word)
         } else {
             Toast.makeText(

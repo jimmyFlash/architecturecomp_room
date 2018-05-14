@@ -23,29 +23,34 @@ class NewWordActivity : AppCompatActivity() {
      */
     companion object {
         const val EXTRA_REPLY = "com.example.android.wordlistsql.REPLY"
+        const val EXTRA_REPLY_MEANING = "com.example.android.wordlistsql.MEANING"
     }
 
-     val mEditWordView: EditText? = null
+     var mEditWordView: EditText? = null
+     var mEditWordMeaningView: EditText? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_word)
         setSupportActionBar(toolbar)
 
-         val button : Button = findViewById(R.id.button_save)
+        val button : Button = findViewById(R.id.button_save)
+
+        mEditWordView = findViewById(R.id.edit_word)
+        mEditWordMeaningView = findViewById(R.id.edit_word_meaning)
         button.setOnClickListener({
 
             val replyIntent = Intent()
-            if (TextUtils.isEmpty(mEditWordView?.text.toString())) {
+            if (TextUtils.isEmpty(mEditWordView?.text.toString()) || TextUtils.isEmpty(mEditWordMeaningView?.text.toString())) {
                 setResult(Activity.RESULT_CANCELED, replyIntent)
             } else {
                 val word = mEditWordView?.text.toString()
+                val meaning = mEditWordMeaningView?.text.toString()
                 replyIntent.putExtra(EXTRA_REPLY, word)
+                replyIntent.putExtra(EXTRA_REPLY_MEANING, meaning)
                 setResult(Activity.RESULT_OK, replyIntent)
             }
             finish()
-
-
         })
     }
 
