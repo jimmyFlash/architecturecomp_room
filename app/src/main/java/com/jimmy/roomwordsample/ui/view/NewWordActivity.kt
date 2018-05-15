@@ -1,19 +1,15 @@
-package com.jimmy.roomwordsample
+package com.jimmy.roomwordsample.ui.view
 
 import android.app.Activity
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.widget.Button
 
 import kotlinx.android.synthetic.main.activity_new_word.*
 import android.text.TextUtils
 import android.content.Intent
 import android.widget.EditText
-
-
-
+import com.jimmy.roomwordsample.R
 
 
 class NewWordActivity : AppCompatActivity() {

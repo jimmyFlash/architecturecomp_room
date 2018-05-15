@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NewWordActivity"
+            android:name=".ui.view.NewWordActivity"
             android:label="@string/title_activity_new_word"
             android:theme="@style/AppTheme.NoActionBar">
 
