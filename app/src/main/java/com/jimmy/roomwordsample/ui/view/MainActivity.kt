@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.jimmy.roomwordsample.NewWordActivity
 import com.jimmy.roomwordsample.R
 import com.jimmy.roomwordsample.businesslogic.storage.entities.Word
 import com.jimmy.roomwordsample.ui.adapters.WordListAdapter
@@ -81,12 +80,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
 
-            val word : Word = Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY),
+            val word : Word = Word(data!!.getStringExtra(NewWordActivity.EXTRA_REPLY),
                     data.getStringExtra(NewWordActivity.EXTRA_REPLY_MEANING))
             mWordViewModel.insert(word)
         } else {

@@ -1,8 +1,14 @@
 package com.jimmy.roomwordsample.ui.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BulletSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +37,26 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
     public void onBindViewHolder(@NonNull WordListAdapter.WordViewHolder holder, int position) {
 
         if (mWords != null) {
+
+
             Word current = mWords.get(position);
-            holder.wordItemView.setText(current.getWord());
-            holder.wordMeaningView.setText(current.getMeaning());
+
+            SpannableString spannableWord = new SpannableString(current.getWord());
+            SpannableString spannableMeaning= new SpannableString(current.getMeaning());
+
+
+            spannableWord.setSpan(
+                    new RelativeSizeSpan(1.3f),
+                    0, 1,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            spannableMeaning.setSpan(
+                    new BulletSpan(10, Color.GRAY),
+                    /* start index */ 0, /* end index */ spannableMeaning.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            holder.wordItemView.setText(spannableWord);
+            holder.wordMeaningView.setText(spannableMeaning);
         } else {
             // Covers the case of data not being ready yet.
             holder.wordItemView.setText("No Word");
