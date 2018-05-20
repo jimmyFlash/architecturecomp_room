@@ -6,8 +6,10 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.jimmy.roomwordsample.businesslogic.storage.doa.WordDao;
 import com.jimmy.roomwordsample.businesslogic.storage.entities.Word;
@@ -22,6 +24,9 @@ import java.util.Objects;
  */
 @Database(entities = {Word.class}, version = 1)
 public abstract class WordRoomDatabase extends RoomDatabase{
+
+    private static final String FIRST_RUN = "firstRun";
+    private static SharedPreferences sharedP;
 
     //Define the DAOs that work with the database. Provide an abstract "getter" method for each @Dao
     public abstract WordDao wordDao();
@@ -50,6 +55,8 @@ public abstract class WordRoomDatabase extends RoomDatabase{
                 }
             }
         }
+         sharedP = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+
         return INSTANCE;
     }
 
@@ -59,14 +66,19 @@ public abstract class WordRoomDatabase extends RoomDatabase{
         @Override
         public void onOpen (@NonNull SupportSQLiteDatabase db){
             super.onOpen(db);
-            new PopulateDbAsync(INSTANCE).execute();
+            if(sharedP.getBoolean(FIRST_RUN, true)){
+                SharedPreferences.Editor editor = sharedP.edit();
+                editor.putBoolean(FIRST_RUN, false);
+                editor.apply();
+                new PopulateDbAsync(INSTANCE).execute();
+            }
         }
     };
 
     /*
      AsyncTask that deletes the contents of the database, then populates it with the two words "Hello" and "World"
      */
-    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
+    private static class PopulateDbAsync extends AsyncTask<Void, Void, List<Word>> {
 
         private final WordDao mDao;
 
@@ -75,18 +87,27 @@ public abstract class WordRoomDatabase extends RoomDatabase{
         }
 
         @Override
-        protected Void doInBackground(final Void... params) {
-            LiveData<List<Word>> listWords = Objects.requireNonNull(mDao.getAllWords());
+        protected List<Word> doInBackground(final Void... params) {
+            LiveData<List<Word>> listWordsLiveData = Objects.requireNonNull(mDao.getAllWords());
 
-            if(listWords == null) {
+            List<Word> list = listWordsLiveData.getValue();
+
+
                 mDao.deleteAll();
                 Word word = new Word("Android", "Mobile operating system developed by Google," +
                         " based on a modified version of the Linux kernel");
                 mDao.insert(word);
                 word = new Word("IOS", "Mobile operating system created and developed by Apple Inc. exclusively for its hardware");
                 mDao.insert(word);
-            }
-            return null;
+
+            return list;
+        }
+
+        @Override
+        protected void onPostExecute(List<Word> aVoid) {
+
+            Log.e("++++++++++++", aVoid + "");
+
         }
     }
 
