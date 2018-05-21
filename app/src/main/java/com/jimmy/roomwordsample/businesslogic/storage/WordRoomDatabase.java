@@ -106,7 +106,7 @@ public abstract class WordRoomDatabase extends RoomDatabase{
         @Override
         protected void onPostExecute(List<Word> aVoid) {
 
-            Log.e("++++++++++++", aVoid + "");
+//            Log.e("++++++++++++", aVoid + "");
 
         }
     }

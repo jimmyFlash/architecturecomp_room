@@ -6,27 +6,35 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.jimmy.roomwordsample.R
 import com.jimmy.roomwordsample.businesslogic.storage.entities.Word
 import com.jimmy.roomwordsample.ui.adapters.WordListAdapter
+import com.jimmy.roomwordsample.ui.adapters.WordListAdapter.SwipCallBack
+import com.jimmy.roomwordsample.ui.helpers.OnStartDragListener
+import com.jimmy.roomwordsample.ui.interactivity.SimpleItemTouchHelperCallback
 import com.jimmy.roomwordsample.ui.viewmodel.WordViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import android.support.v7.widget.DividerItemDecoration
 
 
+class MainActivity : AppCompatActivity() , OnStartDragListener {
 
-
-class MainActivity : AppCompatActivity() {
-
+    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder?) {
+        mItemTouchHelper.startDrag(viewHolder)
+    }
 
 
     lateinit var mWordViewModel: WordViewModel
     val NEW_WORD_ACTIVITY_REQUEST_CODE = 1
+
+    lateinit var mItemTouchHelper: ItemTouchHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -44,11 +52,24 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(intent, NEW_WORD_ACTIVITY_REQUEST_CODE)
         }
 
+
         val recyclerView : RecyclerView = findViewById(R.id.recyclerview)
-        val adapter  =  WordListAdapter(this)
+        val adapter  =  WordListAdapter(this, this, SwipCallBack {
+            mWordViewModel.delete(it)
+
+        })
         recyclerView.adapter = adapter
         recyclerView.layoutManager =  LinearLayoutManager(this)
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
+
+        /*
+         This class is the contract between ItemTouchHelper and your application. It lets you control
+         which touch behaviors are enabled per each ViewHolder and also receive callbacks when user
+         performs these actions.
+         */
+        val callback = SimpleItemTouchHelperCallback(adapter)
+         mItemTouchHelper = ItemTouchHelper(callback)
+         mItemTouchHelper.attachToRecyclerView(recyclerView)
 
         /*
         observer for the LiveData returned by getAllWords().
